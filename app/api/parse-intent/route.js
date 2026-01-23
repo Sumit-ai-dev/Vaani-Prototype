@@ -10,7 +10,7 @@ export async function POST(request) {
 
         // Initialize Gemini
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         // Create a focused prompt for intent parsing
         const intentPrompt = `You are VANI, a voice-powered AI website builder assistant. A user has requested:
