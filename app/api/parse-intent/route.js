@@ -8,9 +8,9 @@ export async function POST(request) {
             return Response.json({ error: 'No prompt provided' }, { status: 400 });
         }
 
-        // Initialize Gemini
+        // Initialize Gemini (using model with free quota)
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
         // Create a focused prompt for intent parsing
         const intentPrompt = `You are VANI, a voice-powered AI website builder assistant. A user has requested:
