@@ -7,10 +7,14 @@ import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useRouter } from 'next/navigation';
 import VoiceRecorder from '@/components/custom/VoiceRecorder';
+import ConfirmationDialog from '@/components/custom/ConfirmationDialog';
 
 function Hero() {
     const [userInput, setUserInput] = useState('');
     const [isEnhancing, setIsEnhancing] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [aiIntent, setAiIntent] = useState('');
+    const [isParsing, setIsParsing] = useState(false);
     const { messages, setMessages } = useContext(MessagesContext);
     const CreateWorkspace = useMutation(api.workspace.CreateWorkspace);
     const router = useRouter();
@@ -84,6 +88,49 @@ function Hero() {
         setUserInput(prev => prev ? prev + ' ' + text : text);
     };
 
+    // Parse user intent and show confirmation
+    const handleParseIntent = async () => {
+        if (!userInput.trim()) return;
+
+        setIsParsing(true);
+        try {
+            const response = await fetch('/api/parse-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: userInput })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setAiIntent(data.aiIntent);
+                setShowConfirmation(true);
+            } else {
+                console.error('Failed to parse intent:', data.error);
+                // Fallback: just generate directly
+                onGenerate(userInput);
+            }
+        } catch (error) {
+            console.error('Error parsing intent:', error);
+            // Fallback: just generate directly
+            onGenerate(userInput);
+        } finally {
+            setIsParsing(false);
+        }
+    };
+
+    // Handle confirmation - user says "Yes"
+    const handleConfirm = () => {
+        setShowConfirmation(false);
+        onGenerate(userInput);
+    };
+
+    // Handle rejection - user says "No"
+    const handleReject = () => {
+        setShowConfirmation(false);
+        // Keep the input so user can edit and try again
+    };
+
     return (
         <div className="min-h-screen bg-gray-950 relative overflow-hidden">
             {/* Animated background elements */}
@@ -139,11 +186,15 @@ function Hero() {
                                                     )}
                                                 </button>
                                                 <button
-                                                    onClick={() => onGenerate(userInput)}
-                                                    disabled={isEnhancing}
-                                                    className={`flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl px-4 py-4 transition-all duration-200 ${isEnhancing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                                    onClick={handleParseIntent}
+                                                    disabled={isEnhancing || isParsing}
+                                                    className={`flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl px-4 py-4 transition-all duration-200 ${(isEnhancing || isParsing) ? 'opacity-70 cursor-not-allowed' : ''}`}
                                                 >
-                                                    <Send className="h-8 w-8" />
+                                                    {isParsing ? (
+                                                        <Loader2 className="h-8 w-8 animate-spin" />
+                                                    ) : (
+                                                        <Send className="h-8 w-8" />
+                                                    )}
                                                 </button>
                                             </>
                                         )}
@@ -175,6 +226,14 @@ function Hero() {
                     </div>
                 </div>
             </div>
+
+            {/* Confirmation Dialog */}
+            <ConfirmationDialog
+                aiIntent={aiIntent}
+                onConfirm={handleConfirm}
+                onReject={handleReject}
+                isVisible={showConfirmation}
+            />
         </div>
     );
 }
