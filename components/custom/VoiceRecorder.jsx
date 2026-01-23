@@ -22,7 +22,7 @@ export default function VoiceRecorder({ onTranscription }) {
     // Check if browser supports Web Speech API
     if (typeof window !== 'undefined') {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      
+
       if (!SpeechRecognition) {
         setIsSupported(false);
         console.warn('Web Speech API not supported in this browser');
@@ -51,7 +51,7 @@ export default function VoiceRecorder({ onTranscription }) {
 
         const fullTranscript = finalTranscript || interimTranscript;
         setTranscript(fullTranscript);
-        
+
         // Send final transcript to parent component
         if (finalTranscript && onTranscription) {
           onTranscription(finalTranscript.trim());
@@ -65,11 +65,28 @@ export default function VoiceRecorder({ onTranscription }) {
 
       // Event: On error
       recognitionInstance.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
+        // 'aborted' is normal when stopping recognition, don't show error
+        if (event.error === 'aborted') {
+          // Silent - this is expected behavior
+          return;
+        }
+
+        // 'no-speech' is also normal - user just didn't speak
+        if (event.error === 'no-speech') {
+          console.log('No speech detected');
+          setIsListening(false);
+          return;
+        }
+
+        // Log other errors for debugging
+        console.warn('Speech recognition error:', event.error);
         setIsListening(false);
-        
+
+        // Only show alert for permission issues
         if (event.error === 'not-allowed') {
           alert('Microphone permission denied. Please allow microphone access to use voice input.');
+        } else if (event.error === 'network') {
+          console.error('Network error - speech recognition requires internet connection');
         }
       };
 
