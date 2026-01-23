@@ -6,6 +6,7 @@ import React, { useContext, useState } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useRouter } from 'next/navigation';
+import VoiceRecorder from '@/components/custom/VoiceRecorder';
 
 function Hero() {
     const [userInput, setUserInput] = useState('');
@@ -28,7 +29,7 @@ function Hero() {
 
     const enhancePrompt = async () => {
         if (!userInput) return;
-        
+
         setIsEnhancing(true);
         try {
             const response = await fetch('/api/enhance-prompt', {
@@ -78,6 +79,11 @@ function Hero() {
         setUserInput(suggestion);
     };
 
+    // Handle voice transcription
+    const handleVoiceTranscription = (text) => {
+        setUserInput(prev => prev ? prev + ' ' + text : text);
+    };
+
     return (
         <div className="min-h-screen bg-gray-950 relative overflow-hidden">
             {/* Animated background elements */}
@@ -92,21 +98,24 @@ function Hero() {
                         <div className="inline-flex items-center justify-center space-x-2 bg-electric-blue-500/20 rounded-full px-6 py-3 mb-6 border border-electric-blue-500/30">
                             <Sparkles className="h-6 w-6 text-electric-blue-400" />
                             <span className="text-electric-blue-400 text-lg font-semibold tracking-wide">
-                                NEXT-GEN AI DEVELOPMENT
+                                🎤 VOICE-POWERED AI DEVELOPMENT
                             </span>
                         </div>
                         <h1 className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-[linear-gradient(45deg,#60a5fa_30%,#ec4899)] leading-tight">
-                            Code the <br className="md:hidden" />Impossible
+                            Speak Your <br className="md:hidden" />Website
                         </h1>
                         <p className="text-xl text-neon-cyan max-w-3xl mx-auto font-mono tracking-tight">
-                            Transform your wildest ideas into production-ready code with Ai-powered assistance
+                            Transform your voice into production-ready websites with VANI - just speak naturally
                         </p>
                     </div>
 
                     {/* Modified Input Section */}
                     <div className="w-full max-w-3xl bg-gray-900/40 backdrop-blur-2xl rounded-xl border-2 border-electric-blue-500/40 shadow-[0_0_40px_5px_rgba(59,130,246,0.15)]">
                         <div className="p-2 bg-gradient-to-r from-electric-blue-500/10 to-purple-500/10">
-                            <div className="bg-gray-900/80 p-6 rounded-lg">
+                            <div className="bg-gray-900/80 p-6 rounded-lg space-y-4">
+                                {/* Voice Recorder Component */}
+                                <VoiceRecorder onTranscription={handleVoiceTranscription} />
+
                                 <div className="flex gap-4">
                                     <textarea
                                         placeholder="DESCRIBE YOUR VISION..."
