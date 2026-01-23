@@ -47,7 +47,7 @@
 
 ### AI & ML
 - **Google Gemini Flash 2.0** - Natural language to code generation
-- **OpenAI Whisper** - Speech-to-text conversion (coming soon)
+- **Web Speech API** - Free browser-based speech-to-text (no API key needed!)
 
 ---
 
@@ -55,8 +55,7 @@
 
 - **Node.js** >= 18.0.0
 - **npm** or **yarn** or **pnpm**
-- **Google Gemini API Key** - [Get it here](https://ai.google.dev/)
-- **OpenAI API Key** - [Get it here](https://platform.openai.com/) (for voice features)
+- **Google Gemini API Key** - [Get it here](https://ai.google.dev/) (100% FREE tier available!)
 
 ---
 
@@ -86,13 +85,12 @@ Create a `.env.local` file in the root directory:
 ```env
 # AI Configuration
 GEMINI_API_KEY=your_gemini_api_key_here
-OPENAI_API_KEY=your_openai_api_key_here
 
 # Convex Configuration
 NEXT_PUBLIC_CONVEX_URL=your_convex_deployment_url
 ```
 
-> **Note:** Copy `.env.local.example` and fill in your API keys
+> **Note:** Voice recognition uses the **free Web Speech API** built into your browser - no API key needed!
 
 ### 4. Start Development Servers
 
