@@ -60,7 +60,6 @@ export default config;
         },
 
     DEPENDANCY: {
-            "@google/generative-ai": "^0.21.0",
             "@heroicons/react": "^1.0.6",
     "@headlessui/react": "^1.7.17",
     "autoprefixer": "^10.0.0",

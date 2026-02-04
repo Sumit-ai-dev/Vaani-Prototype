@@ -4,7 +4,6 @@
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
   <img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" />
-  <img src="https://img.shields.io/badge/Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white" />
 </p>
 
 ---
@@ -46,7 +45,7 @@
 - **Convex** - Real-time backend database
 
 ### AI & ML
-- **Google Gemini Flash 2.0** - Natural language to code generation
+- **OpenAI GPT-4o-mini** - Natural language to code generation
 - **Web Speech API** - Free browser-based speech-to-text (no API key needed!)
 
 ---
@@ -55,7 +54,7 @@
 
 - **Node.js** >= 18.0.0
 - **npm** or **yarn** or **pnpm**
-- **Google Gemini API Key** - [Get it here](https://ai.google.dev/) (100% FREE tier available!)
+- **OpenAI API Key** - [Get it here](https://platform.openai.com/)
 
 ---
 
@@ -84,7 +83,7 @@ Create a `.env.local` file in the root directory:
 
 ```env
 # AI Configuration
-GEMINI_API_KEY=your_gemini_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
 
 # Convex Configuration
 NEXT_PUBLIC_CONVEX_URL=your_convex_deployment_url
@@ -159,8 +158,7 @@ VANI was inspired by the need to make website creation accessible to small busin
 
 ## 🙏 Acknowledgments
 
-- [Google Gemini](https://ai.google.dev/) - For powerful AI capabilities
-- [OpenAI](https://openai.com/) - For Whisper speech recognition
+- [OpenAI](https://openai.com/) - For powerful AI capabilities
 - [Vercel](https://vercel.com/) - For seamless deployment
 - [Convex](https://convex.dev/) - For real-time backend
 - [Next.js](https://nextjs.org/) - For the amazing React framework
