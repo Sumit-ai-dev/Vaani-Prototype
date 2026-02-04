@@ -6,12 +6,6 @@ export async function POST(request) {
         const { prompt } = await request.json();
         
         const openai = createOpenAIClient();
-        if (!openai) {
-            return new Response(JSON.stringify({ error: "OPENAI_API_KEY is not configured", success: false }), {
-                status: 500,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
         const stream = await openai.chat.completions.create({
             model: OPENAI_MODEL,
             messages: [
