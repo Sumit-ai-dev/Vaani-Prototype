@@ -26,7 +26,7 @@
 - 🧠 **AI-Powered Website Generation** - Transform natural language into fully functional websites
 - ⚡ **Real-time Updates** - See changes instantly with Convex backend
 - 🎨 **Beautiful by Default** - Professional, responsive designs out of the box
-- 🔄 **Code Export** - Download your generated code anytime
+- 🧩 **Managed by VANI** - We host and maintain your site so you don’t need to handle code
 
 ### Coming Soon (VANI Enhancements)
 - 🎤 **Voice Input** - Speak your website into existence
@@ -135,6 +135,13 @@ vaani/
 - [ ] Multi-user authentication
 - [ ] WhatsApp integration
 - [ ] Custom domain support
+- [ ] Template library with guided onboarding
+
+---
+
+## 🧭 Product Direction
+
+VANI is designed to deliver a **live hosted website** and an **interactive preview** without exposing source code. The product is template-first with flexible layout variations and a guided, non-technical onboarding flow (logo, brand colors, assets, and business details). For more detail, see the product plan in `docs/product-plan.md`.
 
 ---
 
