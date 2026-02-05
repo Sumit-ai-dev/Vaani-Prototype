@@ -9,9 +9,6 @@ export async function POST(request) {
         }
 
         const openai = createOpenAIClient();
-        if (!openai) {
-            return Response.json({ error: "OPENAI_API_KEY is not configured" }, { status: 500 });
-        }
 
         const systemPrompt = `You are VANI, a voice-powered AI website builder assistant.
 Summarize what you understand the user wants in a single, clear sentence.
