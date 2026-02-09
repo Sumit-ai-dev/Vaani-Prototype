@@ -1,15 +1,17 @@
 export default {
-    SUGGSTIONS: ['Create Todo App', 'Create a Budget Track App', 'Create a Login and Signup page',
-    "Develop a Task Management App",
-    "Create a Fully Responsive Blog Platform",
-    "Design a Minimalistic Note-Taking App",
-    "Develop a Customizable Landing Page",
-    "Develop a Recipe Sharing Platform",
-    "Create a Fitness Tracking App",
-    "Develop a Personal Finance Management Tool",
-    "Create a Language Learning App",
-    "Build a Virtual Event Platform",
-    "Create a Music Streaming Service"
+    SUGGSTIONS: [
+    'Create an online flower shop with delivery',
+    'Build a salon website with booking and services',
+    'Design a restaurant website with menu and reservations',
+    'Create a local gym website with memberships',
+    'Build an electronics store with product categories',
+    'Design a clinic website with appointment requests',
+    'Create a fashion boutique with lookbook and checkout',
+    'Build a real estate site with listings and inquiry form',
+    'Design a photography studio portfolio site',
+    'Create a bakery website with online orders',
+    'Build a travel agency site with packages',
+    'Design a tutoring center website with course listings'
   ],
 
     DEFAULT_FILE: {
