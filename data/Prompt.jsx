@@ -39,6 +39,7 @@ Ensure the project follows best practices in component organization and styling.
 - "lucide-react": "latest"  
 - "react-router-dom": "latest"  
 - "firebase": "^11.1.0"  
+- "openai": "^4.85.0"  
 - "@headlessui/react": "^1.7.17"  
 - "framer-motion": "^10.0.0"  
 - "react-icons": "^5.0.0"  
