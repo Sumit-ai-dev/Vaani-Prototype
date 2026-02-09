@@ -20,6 +20,7 @@ function CodeView() {
     const UpdateFiles = useMutation(api.workspace.UpdateFiles);
     const convex = useConvex();
     const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const preprocessFiles = useCallback((files) => {
         const processed = {};
@@ -52,6 +53,7 @@ function CodeView() {
 
     const GenerateAiCode = useCallback(async () => {
         setLoading(true);
+        setErrorMessage('');
         const PROMPT = JSON.stringify(messages) + " " + Prompt.CODE_GEN_PROMPT;
         
         try {
@@ -62,6 +64,20 @@ function CodeView() {
                 },
                 body: JSON.stringify({ prompt: PROMPT }),
             });
+
+            if (!response.ok || !response.body) {
+                let errorText = 'Unable to generate a preview right now.';
+                try {
+                    const data = await response.json();
+                    if (data?.error) {
+                        errorText = data.error;
+                    }
+                } catch (e) {
+                    // ignore JSON parse errors
+                }
+                setErrorMessage(errorText);
+                return;
+            }
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
@@ -100,6 +116,7 @@ function CodeView() {
             }
         } catch (error) {
             console.error('Error generating AI code:', error);
+            setErrorMessage('Something went wrong while generating the preview.');
         } finally {
             setLoading(false);
         }
@@ -130,6 +147,11 @@ function CodeView() {
                     </p>
                 </div>
             </div>
+            {errorMessage && (
+                <div className="border border-red-500/40 bg-red-500/10 text-red-200 text-sm px-4 py-3">
+                    {errorMessage}
+                </div>
+            )}
             <SandpackProvider 
             files={files}
             template="react" 
