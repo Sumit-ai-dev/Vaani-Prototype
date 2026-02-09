@@ -1,18 +1,30 @@
-import { chatSession } from "@/configs/AiModel";
+import { createOpenAIClient, OPENAI_MODEL } from "@/configs/AiModel";
 
 export async function POST(req) {
     const {prompt} = await req.json();
 
     try {
-        const result = await chatSession.sendMessageStream(prompt);
+        const openai = createOpenAIClient();
+        if (!openai) {
+            return new Response(JSON.stringify({ error: "OPENAI_API_KEY is not configured" }), {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+        const stream = await openai.chat.completions.create({
+            model: OPENAI_MODEL,
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.7,
+            stream: true,
+        });
         
         const encoder = new TextEncoder();
-        const stream = new ReadableStream({
+        const responseStream = new ReadableStream({
             async start(controller) {
                 try {
                     let fullText = '';
-                    for await (const chunk of result.stream) {
-                        const chunkText = chunk.text();
+                    for await (const chunk of stream) {
+                        const chunkText = chunk.choices?.[0]?.delta?.content || '';
                         fullText += chunkText;
                         controller.enqueue(encoder.encode(`data: ${JSON.stringify({chunk: chunkText})}\n\n`));
                     }
@@ -26,7 +38,7 @@ export async function POST(req) {
             },
         });
 
-        return new Response(stream, {
+        return new Response(responseStream, {
             headers: {
                 'Content-Type': 'text/event-stream',
                 'Cache-Control': 'no-cache',

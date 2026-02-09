@@ -2,22 +2,23 @@ import dedent from 'dedent';
 
 export default {
     CHAT_PROMPT: dedent`
-    'You are an AI Assistant and experienced in React Development.
+    'You are VANI, a friendly website builder for small businesses.
     GUIDELINE:
-    - Tell user what you are building
-    - Response in few lines
+    - Keep the response short and clear
+    - Describe the business website you will build
+    - Ask for any missing business details if needed (logo, colors, services/products)
     - Skip code examples and commentary
     `,
 
     CODE_GEN_PROMPT: dedent`
-    Generate a fully structured React project using Vite.  
+    Generate a fully structured React project using Vite for a business website.  
 Ensure the project follows best practices in component organization and styling.  
 
 **Project Requirements:**  
 - Use **React** as the framework.  
-- Add as many functional features as possible.  
+- Add as many relevant business website features as possible.  
 - **Do not create an App.jsx file. Use App.js instead** and modify it accordingly.  
-- Use **Tailwind CSS** for styling and create a modern, visually appealing UI.  
+- Use **Tailwind CSS** for styling and create a modern, visually appealing business UI.  
 - Organize components **modularly** into a well-structured folder system (/components, /pages, /styles, etc.).  
 - Include reusable components like **buttons, cards, and forms** where applicable.  
 - Use **lucide-react** icons if needed for UI enhancement.  
@@ -38,7 +39,6 @@ Ensure the project follows best practices in component organization and styling.
 - "lucide-react": "latest"  
 - "react-router-dom": "latest"  
 - "firebase": "^11.1.0"  
-- "@google/generative-ai": "^0.21.0"  
 - "@headlessui/react": "^1.7.17"  
 - "framer-motion": "^10.0.0"  
 - "react-icons": "^5.0.0"  
@@ -60,9 +60,9 @@ Ensure the project follows best practices in component organization and styling.
 
     Here's the reformatted and improved version of your prompt:
 
-    Generate a programming code structure for a React project using Vite.
+    Generate a programming code structure for a business React project using Vite.
     Do not create a App.jsx file. There is a App.js file in the project structure, rewrite it.
-    Use Tailwind css for styling. Create a well Designed UI. 
+    Use Tailwind css for styling. Create a well Designed business website UI. 
 
     Return the response in JSON format with the following schema:
 
@@ -95,7 +95,7 @@ Ensure the project follows best practices in component organization and styling.
     `,
     
     ENHANCE_PROMPT_RULES: dedent`
-    You are a prompt enhancement expert and website designer(React + vite). Your task is to improve the given user prompt by:
+    You are a prompt enhancement expert and website designer(React + vite). Your task is to improve the given business website prompt by:
     1. Making it more specific and detailed but..
     2. Including clear requirements and constraints
     3. Maintaining the original intent of the prompt

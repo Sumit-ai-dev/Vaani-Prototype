@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { createOpenAIClient, OPENAI_MODEL } from '@/configs/AiModel';
 
 export async function POST(request) {
     try {
@@ -8,25 +8,27 @@ export async function POST(request) {
             return Response.json({ error: 'No prompt provided' }, { status: 400 });
         }
 
-        // Initialize Gemini (using exact model from AiModel.jsx that works)
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-flash-lite-latest' });
+        const openai = createOpenAIClient();
+        if (!openai) {
+            return Response.json({ error: "OPENAI_API_KEY is not configured" }, { status: 500 });
+        }
 
-        // Create a focused prompt for intent parsing
-        const intentPrompt = `You are VANI, a voice-powered AI website builder assistant. A user has requested:
-
-"${prompt}"
-
-Your task: Summarize what you understand the user wants in a single, clear sentence. Start with "I will create" or "I understand you want".
-
+        const systemPrompt = `You are VANI, a voice-powered AI website builder assistant.
+Summarize what you understand the user wants in a single, clear sentence.
+Start with "I will create" or "I understand you want".
 Be specific about what you'll build (e.g., "a landing page with hero section, features grid, and contact form" instead of just "a landing page").
+Response must be one sentence only.`;
 
-Response (one sentence only):`;
+        const result = await openai.chat.completions.create({
+            model: OPENAI_MODEL,
+            messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: prompt },
+            ],
+            temperature: 0.3,
+        });
 
-        // Get AI's understanding
-        const result = await model.generateContent(intentPrompt);
-        const response = await result.response;
-        const aiIntent = response.text().trim();
+        const aiIntent = result.choices?.[0]?.message?.content?.trim() || '';
 
         return Response.json({
             success: true,
