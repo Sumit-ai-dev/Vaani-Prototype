@@ -254,7 +254,7 @@ cd "/Users/sumitdas/Desktop/VAANI DEMO/ai-website-builder-base"
 
 # 2. Create .env.local file
 cat > .env.local << EOF
-GEMINI_API_KEY=your_gemini_key_here
+OPENAI_API_KEY=your_openai_key_here
 NEXT_PUBLIC_CONVEX_URL=your_convex_url_here
 EOF
 

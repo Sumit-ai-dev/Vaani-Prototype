@@ -7,7 +7,6 @@ import { useParams } from 'next/navigation';
 import { useContext, useEffect, useState, useCallback, memo } from 'react';
 import { useMutation } from 'convex/react';
 import Prompt from '@/data/Prompt';
-import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 
 const MessageItem = memo(({ msg, index }) => (
@@ -41,6 +40,7 @@ function ChatView() {
     const { messages, setMessages } = useContext(MessagesContext);
     const [userInput, setUserInput] = useState('');
     const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const UpdateMessages = useMutation(api.workspace.UpdateWorkspace);
 
     const GetWorkSpaceData = useCallback(async () => {
@@ -56,6 +56,7 @@ function ChatView() {
 
     const GetAiResponse = useCallback(async () => {
         setLoading(true);
+        setErrorMessage('');
         const PROMPT = JSON.stringify(messages) + Prompt.CHAT_PROMPT;
         
         try {
@@ -66,6 +67,21 @@ function ChatView() {
                 },
                 body: JSON.stringify({ prompt: PROMPT }),
             });
+
+            if (!response.ok || !response.body) {
+                let errorText = 'Unable to reach AI service right now.';
+                try {
+                    const data = await response.json();
+                    if (data?.error) {
+                        errorText = data.error;
+                    }
+                } catch (e) {
+                    // ignore JSON parse errors
+                }
+                setErrorMessage(errorText);
+                setMessages(prev => [...prev, { role: 'ai', content: errorText }]);
+                return;
+            }
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
@@ -116,6 +132,9 @@ function ChatView() {
             });
         } catch (error) {
             console.error('Error getting AI response:', error);
+            const fallbackMessage = 'Something went wrong while contacting the AI service.';
+            setErrorMessage(fallbackMessage);
+            setMessages(prev => [...prev, { role: 'ai', content: fallbackMessage }]);
         } finally {
             setLoading(false);
         }
@@ -143,6 +162,11 @@ function ChatView() {
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto scrollbar-hide p-4">
                 <div className="max-w-4xl mx-auto space-y-4">
+                    {errorMessage && (
+                        <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-200">
+                            {errorMessage}
+                        </div>
+                    )}
                     {Array.isArray(messages) && messages?.map((msg, index) => (
                         <MessageItem key={index} msg={msg} index={index} />
                     ))}

@@ -1,22 +1,34 @@
-import { chatSession } from "@/configs/AiModel";
+import { createOpenAIClient, OPENAI_MODEL } from "@/configs/AiModel";
 import Prompt from "@/data/Prompt";
 
 export async function POST(request) {
     try {
         const { prompt } = await request.json();
         
-        const result = await chatSession.sendMessageStream([
-            Prompt.ENHANCE_PROMPT_RULES,
-            `Original prompt: ${prompt}`
-        ]);
+        const openai = createOpenAIClient();
+        if (!openai) {
+            return new Response(JSON.stringify({ error: "OPENAI_API_KEY is not configured", success: false }), {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+        const stream = await openai.chat.completions.create({
+            model: OPENAI_MODEL,
+            messages: [
+                { role: "system", content: Prompt.ENHANCE_PROMPT_RULES },
+                { role: "user", content: `Original prompt: ${prompt}` },
+            ],
+            temperature: 0.7,
+            stream: true,
+        });
         
         const encoder = new TextEncoder();
-        const stream = new ReadableStream({
+        const responseStream = new ReadableStream({
             async start(controller) {
                 try {
                     let fullText = '';
-                    for await (const chunk of result.stream) {
-                        const chunkText = chunk.text();
+                    for await (const chunk of stream) {
+                        const chunkText = chunk.choices?.[0]?.delta?.content || '';
                         fullText += chunkText;
                         controller.enqueue(encoder.encode(`data: ${JSON.stringify({chunk: chunkText})}\n\n`));
                     }
@@ -30,7 +42,7 @@ export async function POST(request) {
             },
         });
 
-        return new Response(stream, {
+        return new Response(responseStream, {
             headers: {
                 'Content-Type': 'text/event-stream',
                 'Cache-Control': 'no-cache',
